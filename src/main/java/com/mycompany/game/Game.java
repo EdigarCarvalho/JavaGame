@@ -21,7 +21,7 @@ public class Game extends JPanel implements ActionListener {
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
         lar = (int) tela.getWidth();
         alt = (int) tela.getHeight();
-        timer = new Timer(4, this);
+        timer = new Timer(10, this);
         score = 0;
         lives = 3;
         playerX = lar / 2 - 25;
@@ -35,9 +35,9 @@ public class Game extends JPanel implements ActionListener {
     
     private void respawnEnemy() {
         enemyX = (int) (Math.random() * lar);
-        enemyY = (int) (Math.random() * alt);
-        enemyXSpeed = (Math.random() < 0.5) ? -1 : 1;
-        enemyYSpeed = (Math.random() < 0.5) ? -1 : 1;
+        enemyY = (int) (Math.random() * (alt / 2)); 
+        enemyXSpeed = (Math.random() < 0.5) ? -2 : 2;
+        enemyYSpeed = (Math.random() < 0.5) ? -2 : 2;
     }
 
     public void paintComponent(Graphics g) {
