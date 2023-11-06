@@ -3,6 +3,9 @@ package com.mycompany.game;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class Game extends JPanel implements ActionListener {
     private Timer timer;
@@ -16,21 +19,58 @@ public class Game extends JPanel implements ActionListener {
     private int enemyYSpeed;
     private int lar; // Largura da tela
     private int alt; // Altura da tela
-
+    private BufferedImage [] playerImage = new BufferedImage[8]; 
+    private BufferedImage [] enemyImage = new BufferedImage[2]; 
+    private BufferedImage gameOver;
+    private int step = 1;
+    private int enemyStep = 1;
+    private int counter = 60;
+    
     public Game() {
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
         lar = (int) tela.getWidth();
         alt = (int) tela.getHeight();
         timer = new Timer(4, this);
         score = 0;
-        lives = 3;
+        lives = 2;
         playerX = lar / 2 - 25;
         playerY = alt / 2 - 25; 
         respawnEnemy();
 
         setFocusable(true);
         addKeyListener(new MyKeyListener());
+        setPlayerSprites();
+        setEnemySprites();
+        
+        try {
+        gameOver = ImageIO.read(getClass().getResource("/gameover.png"));
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        
         timer.start();
+    }
+    
+    private void setPlayerSprites() {
+        for (int i = 1; i <= 8; i++) {
+            String valor = Integer.toString(i);
+            try {
+                playerImage[i - 1] = ImageIO.read(getClass().getResource("/ciclo" + valor + ".png"));
+            } catch (IOException e) {
+                System.out.print(e);
+            }
+        }
+    }
+    
+    private void setEnemySprites() {
+        for (int i = 1; i <= 2; i++) {
+            String valor = Integer.toString(i);
+            try {
+                enemyImage[i - 1] = ImageIO.read(getClass().getResource("/inimigo" + valor + ".png"));
+            } catch (IOException e) {
+                System.out.print(e);
+            }
+        }
     }
     
     private void respawnEnemy() {
@@ -42,12 +82,29 @@ public class Game extends JPanel implements ActionListener {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.BLACK);
-        g.fillRect(playerX, playerY, 50, 50);
 
-        g.setColor(Color.RED);
-        g.fillRect(enemyX, enemyY, 50, 50);
+        if (lives == 0) {
+            g.drawImage(gameOver, 0, 0, this.getBounds().width, this.getBounds().height, this);
+            timer.stop();
+            return;
+        }
+        
+        if (enemyImage[enemyStep - 1] != null) {
+            g.drawImage(enemyImage[enemyStep - 1], enemyX, enemyY, 50 * enemyStep , 50, this);
+            
+            if (counter == 0) {
+                counter = 60;
+                enemyStep += 1;
+                if (enemyStep == 3) enemyStep = 1;
+            } else {
+                counter -= 1;
+            }
+        }
 
+        if (playerImage[step - 1] != null) {
+            g.drawImage(playerImage[step - 1], playerX, playerY, 50, 50, this);
+        }
+                
         g.setColor(Color.BLACK);
         g.drawString("Score: " + score, 10, 20);
         g.drawString("Lives: " + lives, 10, 40);
@@ -88,11 +145,10 @@ public class Game extends JPanel implements ActionListener {
         }
         if (enemyY > alt) {
             lives--;
-            if (lives == 0) {
+            if (lives > 0) {
                 // Game over
-                timer.stop();
+                respawnEnemy();
             }
-            respawnEnemy();
         }
     }
 
@@ -106,12 +162,21 @@ private class MyKeyListener extends KeyAdapter {
 
         if (keyCode == KeyEvent.VK_LEFT && playerX > 0) {
             playerX -= (int) (lar * speedPercentage);
+            step += 1;
+            if (step >= 4) 
+                step = 1;
         } else if (keyCode == KeyEvent.VK_RIGHT && playerX + playerWidth < lar) {
             playerX += (int) (lar * speedPercentage);
+            step += 1;
+            if (step == 9 || step < 5) 
+                step = 5;
         } else if (keyCode == KeyEvent.VK_UP && playerY > 0) {
             playerY -= (int) (alt * speedPercentage);
         } else if (keyCode == KeyEvent.VK_DOWN && playerY + playerHeight < alt) {
             playerY += (int) (alt * speedPercentage);
+        } else if (keyCode == KeyEvent.VK_SPACE && lives ==0) {
+            timer.start();
+            lives = 3;
         }
     }
 }
