@@ -25,6 +25,9 @@ public class Game extends JPanel implements ActionListener {
     private int step = 1;
     private int enemyStep = 1;
     private int counter = 60;
+    private BufferedImage backgroundImage;
+    private BufferedImage heartImage;
+    
     
     public Game() {
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
@@ -43,10 +46,23 @@ public class Game extends JPanel implements ActionListener {
         setEnemySprites();
         
         try {
+            backgroundImage = ImageIO.read(getClass().getResource("/background.jpeg"));
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        
+        try {
+        heartImage = ImageIO.read(getClass().getResource("/heart.png"));
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        
+        try {
         gameOver = ImageIO.read(getClass().getResource("/gameover.png"));
         } catch (IOException e) {
             System.out.println(e);
         }
+        
         
         timer.start();
     }
@@ -82,7 +98,40 @@ public class Game extends JPanel implements ActionListener {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, lar, alt, this);
+        }
+        
+         g.setColor(Color.WHITE);
+         g.setFont(new Font("Arial", Font.PLAIN, 20));
+         
+        String scoreText = "Score: " + score;
+        FontMetrics metrics = g.getFontMetrics();
+        int xScore = (lar - metrics.stringWidth(scoreText)) / 2;
+        int yScore = 30; 
+        g.drawString(scoreText, xScore, yScore);
+        
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRect(xScore - 5, yScore - metrics.getHeight(), metrics.stringWidth(scoreText) + 10, metrics.getHeight() + 5);
+    
+        String livesText = "Lives: ";
+        int xLives = (lar - metrics.stringWidth(scoreText)) / 2 + 100;
+        int yLives = 30; 
+        g.drawString(livesText, xLives, yLives);
+        
+        int heartWidth = 20;
+        int heartHeight = 20;
+        int heartsGap = 5;
 
+        int xHearts = xLives + metrics.stringWidth(livesText) + 10;
+        int yHearts = 30 - heartHeight;
+
+        for (int i = 0; i < lives; i++) {
+            g.drawImage(heartImage, xHearts + (heartWidth + heartsGap) * i, yHearts, heartWidth, heartHeight, this);
+        }
+        
         if (lives == 0) {
             g.drawImage(gameOver, 0, 0, this.getBounds().width, this.getBounds().height, this);
             timer.stop();
