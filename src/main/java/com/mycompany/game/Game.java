@@ -1,3 +1,8 @@
+// TRABALHO FEITO POR:
+// EDIGAR DE ALMEIDA CARVALHO
+// IAN SILVA DOS SANTOS
+// LUCIANO AMORIM DE SOUSA
+
 package com.mycompany.game;
 
 import javax.swing.*;
@@ -5,9 +10,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 import javax.imageio.ImageIO;
 
-public class Game extends JPanel implements ActionListener {
+public class Game extends JPanel implements ActionListener , MouseListener{
     private Timer timer;
     private int score;
     private int lives;
@@ -27,8 +33,11 @@ public class Game extends JPanel implements ActionListener {
     private int counter = 60;
     private BufferedImage backgroundImage;
     private BufferedImage heartImage;
-    
-    
+    private boolean pressedLeft;
+    private boolean pressedRight;
+    private boolean pressedDown;
+    private boolean pressedUp;
+    private Image bird;
     public Game() {
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
         lar = (int) tela.getWidth();
@@ -62,6 +71,13 @@ public class Game extends JPanel implements ActionListener {
         } catch (IOException e) {
             System.out.println(e);
         }
+        
+        try {
+            bird = new ImageIcon(new URL("https://steamuserimages-a.akamaihd.net/ugc/958586341173600765/019F0AFA8BF24C501666B04A7F1FD61D233C6E32/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false")).getImage();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        
         
         
         timer.start();
@@ -101,6 +117,10 @@ public class Game extends JPanel implements ActionListener {
         
         if (backgroundImage != null) {
             g.drawImage(backgroundImage, 0, 0, lar, alt, this);
+        }
+        
+        if (bird != null) {
+            g.drawImage(bird, 0, 0, this);
         }
         
          g.setColor(Color.WHITE);
@@ -146,7 +166,7 @@ public class Game extends JPanel implements ActionListener {
                 enemyStep += 1;
                 if (enemyStep == 3) enemyStep = 1;
             } else {
-                counter -= 1;
+                counter -= 2;
             }
         }
 
@@ -160,8 +180,6 @@ public class Game extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        playerMovement();
-
         enemyX += enemyXSpeed;
         enemyY += enemyYSpeed;
 
@@ -173,10 +191,6 @@ public class Game extends JPanel implements ActionListener {
         checkOutOfBounds();
 
         repaint();
-    }
-
-    private void playerMovement() {
-        // Implement player movement as desired (e.g., using arrow keys)
     }
 
     public boolean checkCollision() {
@@ -201,6 +215,31 @@ public class Game extends JPanel implements ActionListener {
         }
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 private class MyKeyListener extends KeyAdapter {
     private double speedPercentage = 0.05; // Ajuste o valor conforme necessário
 
@@ -219,11 +258,15 @@ private class MyKeyListener extends KeyAdapter {
             step += 1;
             if (step == 9 || step < 5) 
                 step = 5;
-        } else if (keyCode == KeyEvent.VK_UP && playerY > 0) {
+        }
+        
+        if (keyCode == KeyEvent.VK_UP && playerY > 0) {
             playerY -= (int) (alt * speedPercentage);
         } else if (keyCode == KeyEvent.VK_DOWN && playerY + playerHeight < alt) {
             playerY += (int) (alt * speedPercentage);
-        } else if (keyCode == KeyEvent.VK_SPACE && lives ==0) {
+        } 
+        
+        if (keyCode == KeyEvent.VK_SPACE && lives ==0) {
             timer.start();
             lives = 3;
         }
