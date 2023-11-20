@@ -1,5 +1,5 @@
 // TRABALHO FEITO POR:
-// EDIGAR DE ALMEIDA CARVALHO
+// EDIGAR DE ALMEIDA CARVALHOs
 // IAN SILVA DOS SANTOS
 // LUCIANO AMORIM DE SOUSA
 
@@ -45,6 +45,7 @@ public class Game extends JPanel implements ActionListener {
         @Override
         protected Void doInBackground() throws Exception {
             while (true) {
+
                 repaint();
                 Thread.sleep(99999999); 
                 
@@ -56,7 +57,7 @@ public class Game extends JPanel implements ActionListener {
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
         lar = (int) tela.getWidth();
         alt = (int) tela.getHeight();
-        timer = new Timer(11, this);
+        timer = new Timer(8, this);
         score = 0;
         lives = 2;
         playerX = lar / 2 - 25;
@@ -250,7 +251,6 @@ public class Game extends JPanel implements ActionListener {
     @Override
     public void mouseMoved(MouseEvent e) {
         updateBirdPosition(e);
-        repaint();
     }
 }
 
