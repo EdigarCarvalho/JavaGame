@@ -48,3 +48,17 @@ O jogo depende da biblioteca Swing para a interface gráfica e do Java para a ex
 ## Observações
 
 Este jogo foi desenvolvido como parte de um trabalho acadêmico e é destinado apenas para fins educacionais e de demonstração.
+
+## Gameplay
+
+![Captura de Tela (1)](https://github.com/EdigarCarvalho/JavaGame/assets/106999716/dc6e928f-658d-4a44-85df-82f5b19ad807)
+
+Player
+![ciclo1](https://github.com/EdigarCarvalho/JavaGame/assets/106999716/1d335764-fdc6-4d4c-bf4e-209455544ce8)
+
+Player2
+![bird-flap-animation](https://github.com/EdigarCarvalho/JavaGame/assets/106999716/abb930e7-b2c8-481a-aea7-b2b5ffc19e65)
+
+Enemy
+![inimigo2](https://github.com/EdigarCarvalho/JavaGame/assets/106999716/e0f07fd0-2e81-47e7-8ea5-40737f66ecc8)
+
